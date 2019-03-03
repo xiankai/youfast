@@ -4,6 +4,7 @@ import { Button } from 'react-native-paper';
 import { createStackNavigator } from 'react-navigation';
 import Profile from './profile/ProfileScreen';
 import Settings from './profile/SettingsScreen';
+import styles from '../styles/global.style';
 
 export default createStackNavigator(
     {
@@ -13,7 +14,9 @@ export default createStackNavigator(
     {
         initialRouteName: 'Profile',
         navigationOptions: {
-            tabBarIcon: () => <Button icon="person" />,
+            tabBarIcon: () => (
+                <Button className={styles.nav_icon} icon="person" />
+            ),
             title: 'Profile',
         },
     }
