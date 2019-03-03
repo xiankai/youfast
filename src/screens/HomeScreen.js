@@ -14,7 +14,7 @@ import { Button } from "react-native-paper";
 //     );
 // }
 
-export default class HomeScreen extends React.Component {
+export default class HomeScreen extends React.PureComponent {
     static navigationOptions = {
         tabBarIcon: () => <Button icon="home" />,
         title: "Home"

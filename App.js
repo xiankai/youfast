@@ -11,7 +11,6 @@ import StepTwo from "./src/screens/onboarding/StepTwo";
 import Login from "./src/screens/auth/LoginScreen";
 import Signin from "./src/screens/auth/SigninScreen";
 import Profile from "./src/screens/ProfileScreen";
-import Settings from "./src/screens/SettingsScreen";
 import Home from "./src/screens/HomeScreen";
 import Progress from "./src/screens/ProgressScreen";
 import Creature from "./src/screens/CreatureScreen";
@@ -59,7 +58,7 @@ const AppNavigator = createSwitchNavigator(
 
 const AppContainer = createAppContainer(AppNavigator);
 
-export default class App extends React.Component {
+export default class App extends React.PureComponent {
     render() {
         return <AppContainer />;
     }
