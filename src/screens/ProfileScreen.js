@@ -1,8 +1,22 @@
 import React from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { Text, View } from "react-native";
+import { Button } from "react-native-paper";
+import { createStackNavigator } from "react-navigation";
 
-export default (ProfileScreen = () => (
-    <View>
-        <Text>Profile</Text>
-    </View>
-));
+export default class ProfileScreen extends React.Component {
+    static navigationOptions = {
+        tabBarIcon: () => <Button icon="person" />,
+        title: "Profile"
+    };
+    render() {
+        return createStackNavigator(
+            {
+                Profile,
+                Settings
+            },
+            {
+                initialRouteName: "Profile"
+            }
+        );
+    }
+}

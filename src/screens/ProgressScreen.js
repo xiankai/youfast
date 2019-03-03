@@ -1,8 +1,17 @@
 import React from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { Text, View } from "react-native";
+import { Button } from "react-native-paper";
 
-export default (ProgressScreen = () => (
-    <View>
-        <Text>Progress</Text>
-    </View>
-));
+export default class ProgressScreen extends React.Component {
+    static navigationOptions = {
+        tabBarIcon: () => <Button icon="directions-run" />,
+        title: "Progress"
+    };
+    render() {
+        return (
+            <View>
+                <Text>Progress</Text>
+            </View>
+        );
+    }
+}

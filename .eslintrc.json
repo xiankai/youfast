@@ -15,6 +15,7 @@
         "react-native/react-native": true
     },
     "rules": {
-        "prettier/prettier": "error"
+        "prettier/prettier": 2,
+        "no-undef": 2
     }
 }
