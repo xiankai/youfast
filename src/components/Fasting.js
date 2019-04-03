@@ -23,7 +23,7 @@ export default class Fasting extends React.PureComponent {
             progress: 0,
             goal: 3600,
             isFasting: false,
-            display: 'positive',
+            display: 'negative',
         };
     }
 
@@ -98,12 +98,13 @@ export default class Fasting extends React.PureComponent {
                     <View
                         style={{
                             alignSelf: 'center',
+                            height: '60%',
                         }}
                     >
                         {this.state.progress >= this.state.goal &&
                         this.state.image ? (
                             <Image
-                                style={{ width: 200, height: 200 }}
+                                style={{ width: 200 }}
                                 source={{ uri: this.state.image }}
                             />
                         ) : (

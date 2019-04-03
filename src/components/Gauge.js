@@ -42,7 +42,7 @@ export default class Gauge extends Component {
 
         return (
             <View>
-                <Svg height="200" width="200">
+                <Svg height="100%" width="200">
                     <Path
                         d={describeArc(100, 100, 80, -135, 135)}
                         fill="none"
