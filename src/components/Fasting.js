@@ -1,6 +1,7 @@
 import React from 'react';
-import { View, Text } from 'react-native';
-import { Card, IconButton, Colors } from 'react-native-paper';
+import { View, Text, AsyncStorage } from 'react-native';
+import { Card, Button, IconButton, Colors } from 'react-native-paper';
+import dayjs from 'dayjs';
 import styles from 'styles/global.style';
 import Gauge from './Gauge';
 
@@ -21,18 +22,57 @@ export default class Fasting extends React.PureComponent {
         this.state = {
             progress: 0,
             goal: 3600,
+            isFasting: false,
+            display: 'positive',
         };
     }
 
-    componentDidMount() {
+    async componentWillMount() {
+        let endTime = await AsyncStorage.getItem('endTime');
+        let goal = +(await AsyncStorage.getItem('goal'));
+        if (!endTime || !goal) {
+            return;
+        }
+        let finish = dayjs(endTime);
+        let now = dayjs();
+        let remaining = finish.diff(now, 'seconds');
+        if (remaining < 0) {
+            return;
+        }
+
+        this.setState({ progress: goal - remaining, goal, isFasting: true });
+        this.resumeFasting();
+    }
+
+    startFasting = async () => {
+        let endTime = dayjs().add(this.state.goal, 'seconds');
+        await AsyncStorage.setItem('endTime', endTime.format());
+        await AsyncStorage.setItem('goal', this.state.goal.toString());
+        this.setState({ isFasting: true });
+        this.resumeFasting();
+    };
+
+    resumeFasting = () => {
         this.interval = setInterval(() => {
             if (this.state.progress < this.state.goal) {
                 this.setState({ progress: this.state.progress + 1 });
             } else {
-                this.setState({ progress: 0 });
+                this.stopFasting();
             }
         }, 1000);
-    }
+    };
+
+    stopFasting = () => {
+        this.setState({ isFasting: false });
+        clearInterval(this.interval);
+    };
+
+    setDisplay = () => {
+        let display =
+            this.state.display === 'positive' ? 'negative' : 'positive';
+        this.setState({ display });
+        AsyncStorage.setItem('display', display);
+    };
 
     render() {
         return (
@@ -66,17 +106,27 @@ export default class Fasting extends React.PureComponent {
                             size={30}
                             style={{
                                 borderRadius: 10,
-                                backgroundColor: Colors.red500,
+                                backgroundColor:
+                                    this.state.goal <= 3600
+                                        ? Colors.grey500
+                                        : Colors.red500,
                             }}
+                            disabled={this.state.goal <= 3600}
                             onPress={() =>
                                 this.setState({ goal: this.state.goal - 3600 })
                             }
                         />
-                        <Text style={{ textAlignVertical: 'center' }}>
-                            Time Remaining:{' '}
-                            {formatDuration(
-                                this.state.goal - this.state.progress
-                            )}
+                        <Text
+                            style={{ textAlignVertical: 'center' }}
+                            onPress={this.setDisplay}
+                        >
+                            {this.state.display === 'positive'
+                                ? `Time fasted: ${formatDuration(
+                                      this.state.progress
+                                  )}`
+                                : `Time remaining: ${formatDuration(
+                                      this.state.goal - this.state.progress
+                                  )}`}
                         </Text>
                         <IconButton
                             icon="add"
@@ -89,6 +139,25 @@ export default class Fasting extends React.PureComponent {
                                 this.setState({ goal: this.state.goal + 3600 })
                             }
                         />
+                    </View>
+                    <View>
+                        {this.state.isFasting ? (
+                            <Button
+                                mode="contained"
+                                style={{ backgroundColor: Colors.red500 }}
+                                onPress={this.stopFasting}
+                            >
+                                Stop Fasting
+                            </Button>
+                        ) : (
+                            <Button
+                                mode="contained"
+                                style={{ backgroundColor: Colors.green500 }}
+                                onPress={this.startFasting}
+                            >
+                                Start Fasting
+                            </Button>
+                        )}
                     </View>
                 </View>
             </Card>
