@@ -55,7 +55,7 @@ export default class Gauge extends Component {
                             100,
                             80,
                             -135,
-                            -135 + (progress / 100) * 270
+                            -135 + ((progress || 0) / 100) * 270
                         )}
                         fill="none"
                         stroke={colors.neon_green}
@@ -66,7 +66,3 @@ export default class Gauge extends Component {
         );
     }
 }
-
-Gauge.defaultProps = {
-    progress: 50,
-};
