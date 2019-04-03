@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, AsyncStorage } from 'react-native';
+import { View, Text, AsyncStorage, Image } from 'react-native';
 import { Card, Button, IconButton, Colors } from 'react-native-paper';
 import dayjs from 'dayjs';
 import styles from 'styles/global.style';
@@ -58,6 +58,7 @@ export default class Fasting extends React.PureComponent {
                 this.setState({ progress: this.state.progress + 1 });
             } else {
                 this.stopFasting();
+                this.finishFasting();
             }
         }, 1000);
     };
@@ -65,6 +66,16 @@ export default class Fasting extends React.PureComponent {
     stopFasting = () => {
         this.setState({ isFasting: false });
         clearInterval(this.interval);
+    };
+
+    finishFasting = () => {
+        fetch('https://www.reddit.com/r/aww/hot/.json?limit=2')
+            .then(response => response.json())
+            .then(json => {
+                this.setState({
+                    image: json.data.children[2].data.thumbnail,
+                });
+            });
     };
 
     setDisplay = () => {
@@ -89,11 +100,20 @@ export default class Fasting extends React.PureComponent {
                             alignSelf: 'center',
                         }}
                     >
-                        <Gauge
-                            progress={
-                                (this.state.progress / this.state.goal) * 100
-                            }
-                        />
+                        {this.state.progress >= this.state.goal &&
+                        this.state.image ? (
+                            <Image
+                                style={{ width: 200, height: 200 }}
+                                source={{ uri: this.state.image }}
+                            />
+                        ) : (
+                            <Gauge
+                                progress={
+                                    (this.state.progress / this.state.goal) *
+                                    100
+                                }
+                            />
+                        )}
                     </View>
                     <View
                         style={{
