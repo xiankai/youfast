@@ -1,6 +1,6 @@
-import React from "react";
-import { Text, View } from "react-native";
-import { Button } from "react-native-paper";
+import React from 'react';
+import { Text, View } from 'react-native';
+import { Button } from 'react-native-paper';
 import Auth from '../../stores/Auth';
 
 export default class ProfileScreen extends React.PureComponent {
