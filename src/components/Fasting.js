@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, AsyncStorage, Image } from 'react-native';
+import { AppState, View, Text, AsyncStorage, Image } from 'react-native';
 import { Card, Button, IconButton, Colors } from 'react-native-paper';
 import dayjs from 'dayjs';
 import styles from 'styles/global.style';
@@ -40,15 +40,41 @@ export default class Fasting extends React.PureComponent {
             return;
         }
 
-        this.setState({ progress: goal - remaining, goal, isFasting: true });
+        this.setState({
+            progress: goal - remaining,
+            goal,
+            isFasting: true,
+            endTime,
+        });
         this.resumeFasting();
+    }
+
+    componentDidMount() {
+        AppState.addEventListener('change', () => this.updateFastingStatus());
+    }
+
+    componentWillUnmount() {
+        clearInterval(this.interval);
+    }
+
+    updateFastingStatus() {
+        if (this.interval) {
+            let finish = dayjs(this.state.endTime);
+            let now = dayjs();
+            let remaining = finish.diff(now, 'seconds');
+            if (remaining < 0) {
+                return;
+            }
+
+            this.setState({ progress: this.state.goal - remaining });
+        }
     }
 
     startFasting = async () => {
         let endTime = dayjs().add(this.state.goal, 'seconds');
         await AsyncStorage.setItem('endTime', endTime.format());
         await AsyncStorage.setItem('goal', this.state.goal.toString());
-        this.setState({ isFasting: true });
+        this.setState({ isFasting: true, endTime: endTime.format() });
         this.resumeFasting();
     };
 
