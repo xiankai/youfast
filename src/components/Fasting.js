@@ -16,16 +16,12 @@ const formatDuration = duration => {
 };
 
 export default class Fasting extends React.PureComponent {
-    constructor() {
-        super();
-
-        this.state = {
-            progress: 0,
-            goal: 3600,
-            isFasting: false,
-            display: 'negative',
-        };
-    }
+    state = {
+        progress: 0,
+        goal: 3600,
+        isFasting: false,
+        display: 'negative',
+    };
 
     async componentWillMount() {
         let endTime = await AsyncStorage.getItem('endTime');
@@ -37,6 +33,8 @@ export default class Fasting extends React.PureComponent {
         let now = dayjs();
         let remaining = finish.diff(now, 'seconds');
         if (remaining < 0) {
+            this.saveFast(endTime);
+            this.finishFasting();
             return;
         }
 
@@ -71,7 +69,9 @@ export default class Fasting extends React.PureComponent {
     }
 
     startFasting = async () => {
+        let startTime = dayjs();
         let endTime = dayjs().add(this.state.goal, 'seconds');
+        await AsyncStorage.setItem('startTime', startTime.format());
         await AsyncStorage.setItem('endTime', endTime.format());
         await AsyncStorage.setItem('goal', this.state.goal.toString());
         this.setState({ isFasting: true, endTime: endTime.format() });
@@ -89,9 +89,26 @@ export default class Fasting extends React.PureComponent {
         }, 1000);
     };
 
-    stopFasting = () => {
-        this.setState({ isFasting: false });
+    stopFasting = async () => {
+        let endTime = dayjs().format();
+        await this.saveFast(endTime);
+        this.setState({ progress: 0, goal: 3600, isFasting: false });
         clearInterval(this.interval);
+    };
+
+    saveFast = async endTime => {
+        let startTime = await AsyncStorage.getItem('startTime');
+        let fasts = JSON.parse(await AsyncStorage.getItem('fasts'));
+        if (!fasts) {
+            fasts = [];
+        }
+        fasts.push({
+            startTime,
+            endTime,
+            duration: this.state.progress,
+        });
+        await AsyncStorage.setItem('fasts', JSON.stringify(fasts));
+        await AsyncStorage.setItem('endTime', '');
     };
 
     finishFasting = () => {
