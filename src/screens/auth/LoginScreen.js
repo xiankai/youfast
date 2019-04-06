@@ -1,22 +1,28 @@
 import React from 'react';
 import { View } from 'react-native';
 import { Button } from 'react-native-paper';
-import Auth from '../../stores/Auth';
+import FacebookLogin from './FacebookLogin';
+import GoogleLogin from './GoogleLogin';
+import Firebase from '../../stores/Firebase';
 
 export default class LoginScreen extends React.PureComponent {
-    signIn = async () => {
-        const token = await Auth.signInAsync();
-        if (token) {
-            this.props.navigation.navigate('User');
-        }
-    };
+    componentDidMount() {
+        // Listen for authentication state to change.
+        Firebase.auth().onAuthStateChanged(user => {
+            console.log(user);
+            if (user != null) {
+                this.props.navigation.navigate('User');
+            }
+
+            // Do other things
+        });
+    }
 
     render() {
         return (
             <View>
-                <Button mod="contained" onPress={this.signIn}>
-                    Sign in With Google
-                </Button>
+                <GoogleLogin />
+                <FacebookLogin />
             </View>
         );
     }

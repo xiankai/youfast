@@ -54,7 +54,7 @@ const AppNavigator = createSwitchNavigator(
         Loading,
     },
     {
-        initialRouteName: 'User',
+        initialRouteName: 'Loading',
     }
 );
 
