@@ -1,5 +1,12 @@
 import React from 'react';
-import { AppState, View, Text, AsyncStorage, Image } from 'react-native';
+import {
+    AppState,
+    View,
+    Text,
+    AsyncStorage,
+    Image,
+    ToastAndroid,
+} from 'react-native';
 import { Card, Button, IconButton, Colors } from 'react-native-paper';
 import dayjs from 'dayjs';
 import styles from 'styles/global.style';
@@ -34,6 +41,7 @@ export default class Fasting extends React.PureComponent {
         let now = dayjs();
         let remaining = endTime.diff(now, 'seconds');
         if (remaining < 0) {
+            // remove this later, as we should be saving fasts even without opening the app
             this.saveFast(endTime);
             this.finishFasting();
             return;
@@ -97,6 +105,7 @@ export default class Fasting extends React.PureComponent {
     };
 
     saveFast = async endTime => {
+        ToastAndroid.show('You have finished a fast!');
         let startTime = await FastStore.getStartTime();
         await FastStore.addFast(startTime, endTime, this.state.duration);
         await FastStore.setEndTime();
