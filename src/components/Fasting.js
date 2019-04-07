@@ -4,6 +4,7 @@ import { Card, Button, IconButton, Colors } from 'react-native-paper';
 import dayjs from 'dayjs';
 import styles from 'styles/global.style';
 import Gauge from './Gauge';
+import FastStore from '../stores/FastStore';
 
 const formatDuration = duration => {
     let seconds = duration % 60;
@@ -24,25 +25,26 @@ export default class Fasting extends React.PureComponent {
     };
 
     async componentWillMount() {
-        let endTime = await AsyncStorage.getItem('endTime');
-        let goal = +(await AsyncStorage.getItem('goal'));
-        if (!endTime || !goal) {
+        let display = FastStore.getDisplay();
+        let startTime = await FastStore.getStartTime();
+        let endTime = await FastStore.getEndTime();
+        if (!startTime || !endTime) {
             return;
         }
-        let finish = dayjs(endTime);
         let now = dayjs();
-        let remaining = finish.diff(now, 'seconds');
+        let remaining = endTime.diff(now, 'seconds');
         if (remaining < 0) {
             this.saveFast(endTime);
             this.finishFasting();
             return;
         }
+        let goal = endTime.diff(startTime, 'seconds');
 
         this.setState({
             progress: goal - remaining,
             goal,
             isFasting: true,
-            endTime,
+            display,
         });
         this.resumeFasting();
     }
@@ -71,9 +73,8 @@ export default class Fasting extends React.PureComponent {
     startFasting = async () => {
         let startTime = dayjs();
         let endTime = dayjs().add(this.state.goal, 'seconds');
-        await AsyncStorage.setItem('startTime', startTime.format());
-        await AsyncStorage.setItem('endTime', endTime.format());
-        await AsyncStorage.setItem('goal', this.state.goal.toString());
+        await FastStore.setStartTime(startTime);
+        await FastStore.setEndTime(endTime);
         this.setState({ isFasting: true, endTime: endTime.format() });
         this.resumeFasting();
     };
@@ -97,18 +98,9 @@ export default class Fasting extends React.PureComponent {
     };
 
     saveFast = async endTime => {
-        let startTime = await AsyncStorage.getItem('startTime');
-        let fasts = JSON.parse(await AsyncStorage.getItem('fasts'));
-        if (!fasts) {
-            fasts = [];
-        }
-        fasts.push({
-            startTime,
-            endTime,
-            duration: this.state.progress,
-        });
-        await AsyncStorage.setItem('fasts', JSON.stringify(fasts));
-        await AsyncStorage.setItem('endTime', '');
+        let startTime = await FastStore.getStartTime();
+        await FastStore.addFast(startTime, endTime, this.state.duration);
+        await FastStore.setEndTime();
     };
 
     finishFasting = () => {
@@ -125,7 +117,7 @@ export default class Fasting extends React.PureComponent {
         let display =
             this.state.display === 'positive' ? 'negative' : 'positive';
         this.setState({ display });
-        AsyncStorage.setItem('display', display);
+        FastStore.setDisplay(display);
     };
 
     render() {

@@ -1,11 +1,12 @@
 import React from 'react';
-import { AppState, View, Text, AsyncStorage, Image } from 'react-native';
+import { AppState, View, Text, Image } from 'react-native';
 import { Card, Button, IconButton, Colors } from 'react-native-paper';
 import { LineChart } from 'react-native-chart-kit';
 import { Dimensions } from 'react-native';
 import dayjs from 'dayjs';
 import styles from 'styles/global.style';
 import Gauge from './Gauge';
+import FastStore from '../stores/FastStore';
 
 export default class Fasts extends React.PureComponent {
     state = {
@@ -13,7 +14,7 @@ export default class Fasts extends React.PureComponent {
     };
 
     async componentWillMount() {
-        let fasts = JSON.parse(await AsyncStorage.getItem('fasts'));
+        let fasts = await FastStore.getFasts();
 
         this.setState({
             fasts,
