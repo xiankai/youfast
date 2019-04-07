@@ -7,6 +7,7 @@ import {
     Image,
     ToastAndroid,
 } from 'react-native';
+import { Notifications } from 'expo';
 import { Card, Button, IconButton, Colors } from 'react-native-paper';
 import dayjs from 'dayjs';
 import styles from 'styles/global.style';
@@ -21,6 +22,20 @@ const formatDuration = duration => {
     return `${hours.toString().padStart(2, '0')}:${minutes
         .toString()
         .padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+};
+
+const humanizeDuration = duration => {
+    let minutes = Math.floor((duration % 3600) / 60);
+    let hours = Math.floor((duration % 86400) / 3600);
+    let days = Math.floor(duration / 86400);
+
+    let output = [
+        days ? `${days} days` : '',
+        hours ? `${hours} hours` : '',
+        minutes ? `${minutes} minutes` : '',
+    ];
+
+    return output.filter(Boolean).join(', ');
 };
 
 export default class Fasting extends React.PureComponent {
@@ -85,6 +100,17 @@ export default class Fasting extends React.PureComponent {
         // endTime is for quickly resuming when the app returns from background
         this.setState({ isFasting: true, endTime: endTime.format() });
         this.resumeFasting();
+        Notifications.scheduleLocalNotificationAsync(
+            {
+                title: 'You have reached your fasting goal!',
+                body: `You have fasted a total of ${humanizeDuration(
+                    this.state.goal
+                )}!`,
+            },
+            {
+                time: endTime.toDate(),
+            }
+        );
     };
 
     resumeFasting = () => {
@@ -105,10 +131,7 @@ export default class Fasting extends React.PureComponent {
     };
 
     saveFast = async endTime => {
-        ToastAndroid.show('You have finished a fast!');
-        let startTime = await FastStore.getStartTime();
-        await FastStore.addFast(startTime, endTime, this.state.duration);
-        await FastStore.setEndTime();
+        await FastStore.endFast(endTime, this.state.progress);
     };
 
     finishFasting = () => {
