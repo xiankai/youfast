@@ -9,7 +9,6 @@ export default class LoginScreen extends React.PureComponent {
     componentDidMount() {
         // Listen for authentication state to change.
         Firebase.auth().onAuthStateChanged(user => {
-            console.log(user);
             if (user != null) {
                 this.props.navigation.navigate('User');
             }

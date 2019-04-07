@@ -11,7 +11,6 @@ export default class LoadingScreen extends React.PureComponent {
 
     checkAuth = async function() {
         Firebase.auth().onAuthStateChanged(user => {
-            console.log(user);
             if (user) {
                 this.props.navigation.navigate('User');
             } else {

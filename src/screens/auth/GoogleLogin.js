@@ -18,12 +18,7 @@ export default class GoogleLogin extends React.PureComponent {
             );
 
             // Sign in with credential from the Facebook user.
-            Firebase.auth()
-                .signInAndRetrieveDataWithCredential(credential)
-                .catch(error => {
-                    console.error(error);
-                    // Handle Errors here.
-                });
+            Firebase.auth().signInAndRetrieveDataWithCredential(credential);
         }
     };
 
