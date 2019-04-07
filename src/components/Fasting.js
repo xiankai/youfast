@@ -91,8 +91,7 @@ export default class Fasting extends React.PureComponent {
     };
 
     stopFasting = async () => {
-        let endTime = dayjs().format();
-        await this.saveFast(endTime);
+        await this.saveFast(dayjs());
         this.setState({ progress: 0, goal: 3600, isFasting: false });
         clearInterval(this.interval);
     };
