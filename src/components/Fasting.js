@@ -81,8 +81,8 @@ export default class Fasting extends React.PureComponent {
     startFasting = async () => {
         let startTime = dayjs();
         let endTime = dayjs().add(this.state.goal, 'seconds');
-        await FastStore.setStartTime(startTime);
-        await FastStore.setEndTime(endTime);
+        await FastStore.startFast(startTime, endTime, this.state.goal);
+        // endTime is for quickly resuming when the app returns from background
         this.setState({ isFasting: true, endTime: endTime.format() });
         this.resumeFasting();
     };

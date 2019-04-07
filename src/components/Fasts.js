@@ -28,12 +28,12 @@ export default class Fasts extends React.PureComponent {
                     <LineChart
                         data={{
                             labels: this.state.fasts.map(fast =>
-                                dayjs(fast.startTime).format('D MMM')
+                                fast.startTime.format('D MMM')
                             ),
                             datasets: [
                                 {
                                     data: this.state.fasts.map(
-                                        fast => +fast.duration
+                                        fast => fast.duration
                                     ),
                                 },
                             ],
@@ -53,8 +53,8 @@ export default class Fasts extends React.PureComponent {
 
                 {this.state.fasts.map((fast, i) => (
                     <React.Fragment key={i}>
-                        <Text>{fast.startTime}</Text>
-                        <Text>{fast.endTime}</Text>
+                        <Text>{fast.startTime.format()}</Text>
+                        <Text>{fast.endTime.format()}</Text>
                         <Text>{fast.duration}</Text>
                     </React.Fragment>
                 ))}

@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, ActivityIndicator } from 'react-native';
-import Firebase from '../stores/Firebase';
+import { auth } from '../stores/Firebase';
 
 export default class LoadingScreen extends React.PureComponent {
     constructor() {
@@ -10,7 +10,7 @@ export default class LoadingScreen extends React.PureComponent {
     }
 
     checkAuth = async function() {
-        Firebase.auth().onAuthStateChanged(user => {
+        auth.onAuthStateChanged(user => {
             if (user) {
                 this.props.navigation.navigate('User');
             } else {

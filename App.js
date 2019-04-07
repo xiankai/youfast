@@ -17,6 +17,9 @@ import Progress from './src/screens/ProgressScreen';
 import Creature from './src/screens/CreatureScreen';
 import colors from './src/styles/colors.json';
 
+// https://github.com/facebook/react-native/issues/12981 🙄
+console.disableYellowBox = true;
+
 const AppNavigator = createSwitchNavigator(
     {
         Onboarding: createStackNavigator(

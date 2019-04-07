@@ -3,12 +3,12 @@ import { View } from 'react-native';
 import { Button } from 'react-native-paper';
 import FacebookLogin from './FacebookLogin';
 import GoogleLogin from './GoogleLogin';
-import Firebase from '../../stores/Firebase';
+import { auth } from '../../stores/Firebase';
 
 export default class LoginScreen extends React.PureComponent {
     componentDidMount() {
         // Listen for authentication state to change.
-        Firebase.auth().onAuthStateChanged(user => {
+        auth.onAuthStateChanged(user => {
             if (user != null) {
                 this.props.navigation.navigate('User');
             }

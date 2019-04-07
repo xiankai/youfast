@@ -1,10 +1,10 @@
 import React from 'react';
 import { Text, View } from 'react-native';
 import { Button } from 'react-native-paper';
-import Firebase from '../../stores/Firebase';
+import { auth } from '../../stores/Firebase';
 
 export default class ProfileScreen extends React.PureComponent {
-    signOut = () => Firebase.auth().signOut();
+    signOut = () => auth.signOut();
 
     render() {
         return (
