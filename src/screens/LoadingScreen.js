@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, ActivityIndicator } from 'react-native';
+import { View, ActivityIndicator, Text } from 'react-native';
 import { auth } from '../stores/Firebase';
 
 export default class LoadingScreen extends React.PureComponent {
@@ -9,7 +9,7 @@ export default class LoadingScreen extends React.PureComponent {
         this.checkAuth();
     }
 
-    checkAuth = async function() {
+    checkAuth = async () => {
         auth.onAuthStateChanged(user => {
             if (user) {
                 this.props.navigation.navigate('User');
@@ -21,8 +21,14 @@ export default class LoadingScreen extends React.PureComponent {
 
     render() {
         return (
-            <View>
-                <ActivityIndicator />
+            <View
+                style={{
+                    flex: 1,
+                    justifyContent: 'center',
+                }}
+            >
+                <ActivityIndicator size="large" />
+                <Text>Booting up the app</Text>
             </View>
         );
     }

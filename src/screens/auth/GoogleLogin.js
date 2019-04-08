@@ -5,12 +5,13 @@ import { Google } from 'expo';
 import { GOOGLE_EXP_CLIENT_ID } from 'react-native-dotenv';
 
 export default class GoogleLogin extends React.PureComponent {
-    login = async function() {
+    login = async () => {
         const { type, idToken, accessToken } = await Google.logInAsync({
             clientId: GOOGLE_EXP_CLIENT_ID,
         });
 
         if (type === 'success') {
+            this.props.signingIn();
             // Build Firebase credential with the Facebook access token.
             const credential = firebase.auth.GoogleAuthProvider.credential(
                 idToken,

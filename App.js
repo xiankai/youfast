@@ -19,7 +19,6 @@ import colors from './src/styles/colors.json';
 import Sentry from 'sentry-expo';
 import { SENTRY_DSN } from 'react-native-dotenv';
 
-Sentry.enableInExpoDevelopment = true;
 Sentry.config(SENTRY_DSN).install();
 
 // https://github.com/facebook/react-native/issues/12981 🙄

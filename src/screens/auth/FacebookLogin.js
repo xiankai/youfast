@@ -5,7 +5,7 @@ import { Facebook } from 'expo';
 import { FACEBOOK_APP_ID } from 'react-native-dotenv';
 
 export default class FacebookLogin extends React.PureComponent {
-    login = async function() {
+    login = async () => {
         const { type, token } = await Facebook.logInWithReadPermissionsAsync(
             FACEBOOK_APP_ID,
             {
@@ -14,6 +14,7 @@ export default class FacebookLogin extends React.PureComponent {
         );
 
         if (type === 'success') {
+            this.props.signingIn();
             // Build Firebase credential with the Facebook access token.
             const credential = firebase.auth.FacebookAuthProvider.credential(
                 token
