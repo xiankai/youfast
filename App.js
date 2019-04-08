@@ -16,6 +16,11 @@ import Home from './src/screens/HomeScreen';
 import Progress from './src/screens/ProgressScreen';
 import Creature from './src/screens/CreatureScreen';
 import colors from './src/styles/colors.json';
+import Sentry from 'sentry-expo';
+import { SENTRY_DSN } from 'react-native-dotenv';
+
+Sentry.enableInExpoDevelopment = true;
+Sentry.config(SENTRY_DSN).install();
 
 // https://github.com/facebook/react-native/issues/12981 🙄
 console.disableYellowBox = true;
