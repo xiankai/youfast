@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button } from 'react-native-paper';
-import { auth } from '../../stores/Firebase';
+import firebase, { auth } from '../../stores/Firebase';
 import { Facebook } from 'expo';
 import { FACEBOOK_APP_ID } from 'react-native-dotenv';
 
@@ -15,7 +15,9 @@ export default class FacebookLogin extends React.PureComponent {
 
         if (type === 'success') {
             // Build Firebase credential with the Facebook access token.
-            const credential = auth.FacebookAuthProvider.credential(token);
+            const credential = firebase.auth.FacebookAuthProvider.credential(
+                token
+            );
 
             // Sign in with credential from the Facebook user.
             auth.signInAndRetrieveDataWithCredential(credential);

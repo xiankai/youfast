@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button } from 'react-native-paper';
-import { auth } from '../../stores/Firebase';
+import firebase, { auth } from '../../stores/Firebase';
 import { Google } from 'expo';
 import { GOOGLE_EXP_CLIENT_ID } from 'react-native-dotenv';
 
@@ -12,7 +12,7 @@ export default class GoogleLogin extends React.PureComponent {
 
         if (type === 'success') {
             // Build Firebase credential with the Facebook access token.
-            const credential = auth.GoogleAuthProvider.credential(
+            const credential = firebase.auth.GoogleAuthProvider.credential(
                 idToken,
                 accessToken
             );

@@ -22,3 +22,4 @@ const auth = firebase.auth();
 const Timestamp = firebase.firestore.Timestamp;
 
 export { firestore, auth, Timestamp };
+export default firebase;
