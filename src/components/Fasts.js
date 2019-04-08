@@ -14,16 +14,12 @@ export default class Fasts extends React.PureComponent {
     };
 
     async componentWillMount() {
-        let fasts = await FastStore.getFasts();
-
-        this.setState({
-            fasts,
-        });
+        FastStore.monitorFasts(fasts => this.setState({ fasts }));
     }
 
     render() {
         return (
-            <View>
+            <View style={{ padding: 20 }}>
                 {this.state.fasts.length > 0 && (
                     <LineChart
                         data={{
@@ -38,8 +34,8 @@ export default class Fasts extends React.PureComponent {
                                 },
                             ],
                         }}
-                        height={400}
-                        width={Dimensions.get('screen').width}
+                        height={300}
+                        width={Dimensions.get('screen').width - 40}
                         chartConfig={{
                             backgroundGradientFrom: '#1E2923',
                             backgroundGradientTo: '#08130D',

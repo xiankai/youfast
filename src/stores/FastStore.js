@@ -66,25 +66,23 @@ class FastStore {
         // await AsyncStorage.setItem('fasts', JSON.stringify(fasts));
     }
 
-    async getFasts() {
-        let fasts = await firestore
+    async monitorFasts(cb) {
+        firestore
             .collection('fasts')
             .where('user', '==', auth.currentUser.uid)
             // can't create index because the generated URL won't work
             // .orderBy('startTime', 'asc')
-            .get()
-            .then(querySnapshot =>
-                querySnapshot.docs
-                    .map(doc => doc.data())
-                    .map(fast => ({
-                        startTime: dayjs(fast.startTime.toDate()),
-                        endTime: dayjs(fast.startTime.toDate()),
-                        duration: fast.duration,
-                    }))
+            .onSnapshot(querySnapshot =>
+                cb(
+                    querySnapshot.docs
+                        .map(doc => doc.data())
+                        .map(fast => ({
+                            startTime: dayjs(fast.startTime.toDate()),
+                            endTime: dayjs(fast.startTime.toDate()),
+                            duration: fast.duration,
+                        }))
+                )
             );
-        return fasts || [];
-        // let fasts = await AsyncStorage.getItem('fasts');
-        // return fasts ? JSON.parse(fasts) : [];
     }
 }
 
