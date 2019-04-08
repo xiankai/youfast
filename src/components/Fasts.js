@@ -14,7 +14,23 @@ export default class Fasts extends React.PureComponent {
     };
 
     async componentWillMount() {
-        FastStore.monitorFasts(fasts => this.setState({ fasts }));
+        FastStore.monitorFasts(fasts => {
+            const consolidatedFasts = fasts
+                .reduce((allFasts, fast) => {
+                    let thatDay = allFasts.find(
+                        f => f && f[0].startTime.isSame(fast.startTime, 'day')
+                    );
+                    if (thatDay) {
+                        thatDay.push(fast);
+                    } else {
+                        allFasts.push([fast]);
+                    }
+                    return allFasts;
+                }, [])
+                .sort((a, b) => a[0].startTime.isAfter(b[0].startTime));
+
+            this.setState({ fasts: consolidatedFasts });
+        });
     }
 
     render() {
@@ -23,13 +39,19 @@ export default class Fasts extends React.PureComponent {
                 {this.state.fasts.length > 0 && (
                     <LineChart
                         data={{
-                            labels: this.state.fasts.map(fast =>
-                                fast.startTime.format('D MMM')
+                            labels: this.state.fasts.map(fasts =>
+                                fasts[0].startTime.format('D MMM')
                             ),
                             datasets: [
                                 {
-                                    data: this.state.fasts.map(
-                                        fast => fast.duration
+                                    data: this.state.fasts.map(fasts =>
+                                        Math.floor(
+                                            fasts.reduce(
+                                                (total, fast) =>
+                                                    total + fast.duration,
+                                                0
+                                            ) / 3600
+                                        )
                                     ),
                                 },
                             ],
@@ -37,23 +59,18 @@ export default class Fasts extends React.PureComponent {
                         height={300}
                         width={Dimensions.get('screen').width - 40}
                         chartConfig={{
-                            backgroundGradientFrom: '#1E2923',
-                            backgroundGradientTo: '#08130D',
-                            color: (opacity = 1) =>
-                                `rgba(26, 255, 146, ${opacity})`,
-                            strokeWidth: 2, // optional, default 3
+                            backgroundColor: '#ffffff',
+                            backgroundGradientFrom: '#ffffff',
+                            backgroundGradientTo: '#ffffff',
+                            color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+                            style: {
+                                borderRadius: 16,
+                            },
+                            decimalPlaces: 0,
                         }}
                         bezier
                     />
                 )}
-
-                {this.state.fasts.map((fast, i) => (
-                    <React.Fragment key={i}>
-                        <Text>{fast.startTime.format()}</Text>
-                        <Text>{fast.endTime.format()}</Text>
-                        <Text>{fast.duration}</Text>
-                    </React.Fragment>
-                ))}
             </View>
         );
     }
