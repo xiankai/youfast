@@ -23,6 +23,8 @@ export default class HomeScreen extends React.PureComponent {
         title: 'Home',
     };
 
+    editFast = () => this.props.navigation.navigate('EditFast');
+
     render() {
         return (
             <View
@@ -35,10 +37,13 @@ export default class HomeScreen extends React.PureComponent {
                 <View style={{ height: '5%' }}>
                     <Text style={{ fontSize: 20 }}>YouFast</Text>
                 </View>
-                <View style={{ height: '50%' }}>
-                    <Fasting />
+                <View style={{ height: '60%' }}>
+                    <Fasting
+                        editFast={this.editFast}
+                        navigation={this.props.navigation}
+                    />
                 </View>
-                <View style={{ height: '35%' }}>
+                <View style={{ height: '25%' }}>
                     <Creature />
                 </View>
             </View>

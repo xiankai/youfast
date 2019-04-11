@@ -37,12 +37,12 @@ class FastStore {
 
     async endFast(endTime, duration) {
         let startTime = await AsyncStorage.getItem('startTime');
-        this.addFast(dayjs(startTime), endTime, duration);
+        this.updateFast(dayjs(startTime), endTime, duration);
         AsyncStorage.setItem('startTime', '');
         AsyncStorage.setItem('endTime', '');
     }
 
-    async addFast(startTime, endTime, duration) {
+    async updateFast(startTime, endTime, duration) {
         let fastId = await AsyncStorage.getItem('fastId');
         firestore
             .collection('fasts')

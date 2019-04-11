@@ -15,6 +15,7 @@ import Profile from './src/screens/ProfileScreen';
 import Home from './src/screens/HomeScreen';
 import Progress from './src/screens/ProgressScreen';
 import Creature from './src/screens/CreatureScreen';
+import EditFast from './src/screens/EditFastScreen';
 import colors from './src/styles/colors.json';
 import Sentry from 'sentry-expo';
 import { SENTRY_DSN } from 'react-native-dotenv';
@@ -44,18 +45,27 @@ const AppNavigator = createSwitchNavigator(
                 initialRouteName: 'Login',
             }
         ),
-        User: createMaterialBottomTabNavigator(
+        User: createStackNavigator(
             {
-                Home: { screen: Home },
-                Progress: { screen: Progress },
-                Creature: { screen: Creature },
-                Profile: {
-                    screen: Profile,
-                },
+                User: createMaterialBottomTabNavigator(
+                    {
+                        Home: { screen: Home },
+                        Progress: { screen: Progress },
+                        Creature: { screen: Creature },
+                        Profile: {
+                            screen: Profile,
+                        },
+                    },
+                    {
+                        initialRouteName: 'Home',
+                        barStyle: { backgroundColor: colors.background },
+                    }
+                ),
+                EditFast: { screen: EditFast },
             },
             {
-                initialRouteName: 'Home',
-                barStyle: { backgroundColor: colors.background },
+                mode: 'modal',
+                headerMode: 'none',
             }
         ),
         Loading,

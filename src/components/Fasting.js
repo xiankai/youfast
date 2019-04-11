@@ -205,7 +205,7 @@ export default class Fasting extends React.PureComponent {
                                 <Text>
                                     {this.state.startTime.format('HH:mm')}
                                 </Text>
-                                <Text onPress={this.editFast}>EDIT</Text>
+                                <Text onPress={this.props.editFast}>EDIT</Text>
                             </View>
                         )}
                         <IconButton
@@ -246,7 +246,7 @@ export default class Fasting extends React.PureComponent {
                                 <Text>
                                     {this.state.endTime.format('HH:mm')}
                                 </Text>
-                                <Text onPress={this.endTime}>EDIT</Text>
+                                <Text onPress={this.props.editFast}>EDIT</Text>
                             </View>
                         )}
                     </View>
