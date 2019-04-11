@@ -162,29 +162,29 @@ export default class Fasting extends React.PureComponent {
                     style={{
                         height: '95%',
                         alignSelf: 'center',
+                        alignContent: 'center',
                         padding: 20,
                     }}
                 >
                     <View
                         style={{
-                            alignSelf: 'center',
                             height: '60%',
                         }}
                     >
                         {this.state.progress >= this.state.goal &&
-                            this.state.image ? (
-                                <Image
-                                    style={{ width: 200 }}
-                                    source={{ uri: this.state.image }}
-                                />
-                            ) : (
-                                <Gauge
-                                    progress={
-                                        (this.state.progress / this.state.goal) *
-                                        100
-                                    }
-                                />
-                            )}
+                        this.state.image ? (
+                            <Image
+                                style={{ width: 200 }}
+                                source={{ uri: this.state.image }}
+                            />
+                        ) : (
+                            <Gauge
+                                progress={
+                                    (this.state.progress / this.state.goal) *
+                                    100
+                                }
+                            />
+                        )}
                     </View>
                     <View
                         style={{
@@ -222,15 +222,30 @@ export default class Fasting extends React.PureComponent {
                             }
                         />
                     </View>
-                    <View>
+                    <View
+                        style={{
+                            flexDirection: 'row',
+                        }}
+                    >
                         <Text
-                            style={{ textAlignVertical: 'center' }}
+                            style={{
+                                alignSelf: 'center',
+                            }}
                             onPress={this.setDisplay}
                         >
                             {this.state.display === 'positive'
-                                ? `Time fasted: ${formatDuration(this.state.progress)}`
-                                : `Time remaining: ${formatDuration(this.state.goal - this.state.progress)}`}
+                                ? `Time fasted: ${formatDuration(
+                                      this.state.progress
+                                  )}`
+                                : `Time remaining: ${formatDuration(
+                                      this.state.goal - this.state.progress
+                                  )}`}
                         </Text>
+                        <IconButton
+                            icon="swap-vert"
+                            size={24}
+                            onPress={this.setDisplay}
+                        />
                     </View>
                     <View>
                         {this.state.isFasting ? (
