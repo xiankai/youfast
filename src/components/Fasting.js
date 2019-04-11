@@ -38,6 +38,10 @@ const humanizeDuration = duration => {
     return output.filter(Boolean).join(', ');
 };
 
+const durationInHours = duration => {
+    return `${Math.floor((duration / 3600) * 10) / 10} hours`;
+};
+
 export default class Fasting extends React.PureComponent {
     state = {
         progress: 0,
@@ -168,19 +172,19 @@ export default class Fasting extends React.PureComponent {
                         }}
                     >
                         {this.state.progress >= this.state.goal &&
-                        this.state.image ? (
-                            <Image
-                                style={{ width: 200 }}
-                                source={{ uri: this.state.image }}
-                            />
-                        ) : (
-                            <Gauge
-                                progress={
-                                    (this.state.progress / this.state.goal) *
-                                    100
-                                }
-                            />
-                        )}
+                            this.state.image ? (
+                                <Image
+                                    style={{ width: 200 }}
+                                    source={{ uri: this.state.image }}
+                                />
+                            ) : (
+                                <Gauge
+                                    progress={
+                                        (this.state.progress / this.state.goal) *
+                                        100
+                                    }
+                                />
+                            )}
                     </View>
                     <View
                         style={{
@@ -203,17 +207,8 @@ export default class Fasting extends React.PureComponent {
                                 this.setState({ goal: this.state.goal - 3600 })
                             }
                         />
-                        <Text
-                            style={{ textAlignVertical: 'center' }}
-                            onPress={this.setDisplay}
-                        >
-                            {this.state.display === 'positive'
-                                ? `Time fasted: ${formatDuration(
-                                      this.state.progress
-                                  )}`
-                                : `Time remaining: ${formatDuration(
-                                      this.state.goal - this.state.progress
-                                  )}`}
+                        <Text style={{ textAlignVertical: 'center' }}>
+                            {durationInHours(this.state.goal)}
                         </Text>
                         <IconButton
                             icon="add"
@@ -226,6 +221,16 @@ export default class Fasting extends React.PureComponent {
                                 this.setState({ goal: this.state.goal + 3600 })
                             }
                         />
+                    </View>
+                    <View>
+                        <Text
+                            style={{ textAlignVertical: 'center' }}
+                            onPress={this.setDisplay}
+                        >
+                            {this.state.display === 'positive'
+                                ? `Time fasted: ${formatDuration(this.state.progress)}`
+                                : `Time remaining: ${formatDuration(this.state.goal - this.state.progress)}`}
+                        </Text>
                     </View>
                     <View>
                         {this.state.isFasting ? (
