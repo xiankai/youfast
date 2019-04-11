@@ -41,28 +41,26 @@ export default class Gauge extends Component {
         const { progress } = this.props;
 
         return (
-            <View>
-                <Svg height="100%" width="200">
-                    <Path
-                        d={describeArc(100, 100, 80, -135, 135)}
-                        fill="none"
-                        stroke={colors.grey}
-                        strokeWidth="20"
-                    />
-                    <Path
-                        d={describeArc(
-                            100,
-                            100,
-                            80,
-                            -135,
-                            -135 + ((progress || 0) / 100) * 270
-                        )}
-                        fill="none"
-                        stroke={colors.neon_green}
-                        strokeWidth="20"
-                    />
-                </Svg>
-            </View>
+            <Svg height="100%" width={400}>
+                <Path
+                    d={describeArc(200, 90, 80, -135, 135)}
+                    fill="none"
+                    stroke={colors.grey}
+                    strokeWidth="20"
+                />
+                <Path
+                    d={describeArc(
+                        200,
+                        90,
+                        80,
+                        -135,
+                        -135 + ((progress || 0) / 100) * 270
+                    )}
+                    fill="none"
+                    stroke={colors.neon_green}
+                    strokeWidth="20"
+                />
+            </Svg>
         );
     }
 }

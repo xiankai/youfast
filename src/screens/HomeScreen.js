@@ -32,13 +32,13 @@ export default class HomeScreen extends React.PureComponent {
                     padding: 20,
                 }}
             >
-                <View style={{ flex: 1 }}>
+                <View style={{ height: '5%' }}>
                     <Text style={{ fontSize: 20 }}>YouFast</Text>
                 </View>
-                <View style={{ flex: 5 }}>
+                <View style={{ height: '50%' }}>
                     <Fasting />
                 </View>
-                <View style={{ flex: 3 }}>
+                <View style={{ height: '35%' }}>
                     <Creature />
                 </View>
             </View>

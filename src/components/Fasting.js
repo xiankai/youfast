@@ -72,6 +72,8 @@ export default class Fasting extends React.PureComponent {
             goal,
             isFasting: true,
             display,
+            startTime: dayjs(startTime),
+            endTime: dayjs(endTime),
         });
         this.resumeFasting();
     }
@@ -86,7 +88,7 @@ export default class Fasting extends React.PureComponent {
 
     updateFastingStatus() {
         if (this.interval) {
-            let finish = dayjs(this.state.endTime);
+            let finish = this.state.endTime;
             let now = dayjs();
             let remaining = finish.diff(now, 'seconds');
             if (remaining < 0) {
@@ -101,8 +103,7 @@ export default class Fasting extends React.PureComponent {
         let startTime = dayjs();
         let endTime = dayjs().add(this.state.goal, 'seconds');
         await FastStore.startFast(startTime, endTime, this.state.goal);
-        // endTime is for quickly resuming when the app returns from background
-        this.setState({ isFasting: true, endTime: endTime.format() });
+        this.setState({ isFasting: true, startTime, endTime });
         this.resumeFasting();
         Notifications.scheduleLocalNotificationAsync(
             {
@@ -157,10 +158,13 @@ export default class Fasting extends React.PureComponent {
 
     render() {
         return (
-            <Card>
+            <Card
+                style={{
+                    alignContent: 'center',
+                }}
+            >
                 <View
                     style={{
-                        height: '95%',
                         alignSelf: 'center',
                         alignContent: 'center',
                         padding: 20,
@@ -168,7 +172,7 @@ export default class Fasting extends React.PureComponent {
                 >
                     <View
                         style={{
-                            height: '60%',
+                            height: 150,
                         }}
                     >
                         {this.state.progress >= this.state.goal &&
@@ -192,6 +196,18 @@ export default class Fasting extends React.PureComponent {
                             justifyContent: 'center',
                         }}
                     >
+                        {this.state.startTime && (
+                            <View>
+                                <Text>Start</Text>
+                                <Text>
+                                    {this.state.startTime.format('ddd D MMM')}
+                                </Text>
+                                <Text>
+                                    {this.state.startTime.format('HH:mm')}
+                                </Text>
+                                <Text onPress={this.editFast}>EDIT</Text>
+                            </View>
+                        )}
                         <IconButton
                             icon="remove"
                             size={30}
@@ -221,51 +237,68 @@ export default class Fasting extends React.PureComponent {
                                 this.setState({ goal: this.state.goal + 3600 })
                             }
                         />
-                    </View>
-                    <View
-                        style={{
-                            flexDirection: 'row',
-                        }}
-                    >
-                        <Text
-                            style={{
-                                alignSelf: 'center',
-                            }}
-                            onPress={this.setDisplay}
-                        >
-                            {this.state.display === 'positive'
-                                ? `Time fasted: ${formatDuration(
-                                      this.state.progress
-                                  )}`
-                                : `Time remaining: ${formatDuration(
-                                      this.state.goal - this.state.progress
-                                  )}`}
-                        </Text>
-                        <IconButton
-                            icon="swap-vert"
-                            size={24}
-                            onPress={this.setDisplay}
-                        />
-                    </View>
-                    <View>
-                        {this.state.isFasting ? (
-                            <Button
-                                mode="contained"
-                                style={{ backgroundColor: Colors.red500 }}
-                                onPress={this.stopFasting}
-                            >
-                                Stop Fasting
-                            </Button>
-                        ) : (
-                            <Button
-                                mode="contained"
-                                style={{ backgroundColor: Colors.green500 }}
-                                onPress={this.startFasting}
-                            >
-                                Start Fasting
-                            </Button>
+                        {this.state.endTime && (
+                            <View>
+                                <Text>End</Text>
+                                <Text>
+                                    {this.state.endTime.format('ddd D MMM')}
+                                </Text>
+                                <Text>
+                                    {this.state.endTime.format('HH:mm')}
+                                </Text>
+                                <Text onPress={this.endTime}>EDIT</Text>
+                            </View>
                         )}
                     </View>
+                </View>
+                <View
+                    style={{
+                        alignSelf: 'center',
+                        flexDirection: 'row',
+                    }}
+                >
+                    <Text
+                        style={{
+                            alignSelf: 'center',
+                        }}
+                        onPress={this.setDisplay}
+                    >
+                        {this.state.display === 'positive'
+                            ? `Time fasted: ${formatDuration(
+                                  this.state.progress
+                              )}`
+                            : `Time remaining: ${formatDuration(
+                                  this.state.goal - this.state.progress
+                              )}`}
+                    </Text>
+                    <IconButton
+                        icon="swap-vert"
+                        size={24}
+                        onPress={this.setDisplay}
+                    />
+                </View>
+                <View
+                    style={{
+                        alignSelf: 'center',
+                    }}
+                >
+                    {this.state.isFasting ? (
+                        <Button
+                            mode="contained"
+                            style={{ backgroundColor: Colors.red500 }}
+                            onPress={this.stopFasting}
+                        >
+                            Stop Fasting
+                        </Button>
+                    ) : (
+                        <Button
+                            mode="contained"
+                            style={{ backgroundColor: Colors.green500 }}
+                            onPress={this.startFasting}
+                        >
+                            Start Fasting
+                        </Button>
+                    )}
                 </View>
             </Card>
         );
