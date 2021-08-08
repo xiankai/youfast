@@ -16,6 +16,8 @@
     "react-native-paper": "^2.12.0",
     "react-navigation": "^3.3.2",
     "react-navigation-material-bottom-tabs": "^1.0.0",
+    "react-redux": "^7.0.2",
+    "redux": "^4.0.1",
     "sentry-expo": "^1.12.0"
   },
   "devDependencies": {

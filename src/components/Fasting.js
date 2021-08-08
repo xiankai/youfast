@@ -13,6 +13,8 @@ import dayjs from 'dayjs';
 import styles from 'styles/global.style';
 import Gauge from './Gauge';
 import FastStore from '../stores/FastStore';
+import { connect } from 'react-redux';
+import { toggle, startFasting, endFast } from '../reducers/Fasting';
 
 const formatDuration = duration => {
     let seconds = duration % 60;
@@ -42,7 +44,7 @@ const durationInHours = duration => {
     return `${Math.floor((duration / 3600) * 10) / 10} hours`;
 };
 
-export default class Fasting extends React.PureComponent {
+class Fasting extends React.PureComponent {
     state = {
         progress: 0,
         goal: 3600,
@@ -304,3 +306,12 @@ export default class Fasting extends React.PureComponent {
         );
     }
 }
+
+export default connect(
+    state => state.fasting,
+    {
+        toggle,
+        startFasting,
+        endFast,
+    }
+)(Fasting);

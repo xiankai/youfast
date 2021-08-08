@@ -19,6 +19,11 @@ import EditFast from './src/screens/EditFastScreen';
 import colors from './src/styles/colors.json';
 import Sentry from 'sentry-expo';
 import { SENTRY_DSN } from 'react-native-dotenv';
+import { createStore } from 'redux';
+import { Provider } from 'react-redux';
+import RootReducer from './src/reducers/Root';
+
+const store = createStore(RootReducer);
 
 Sentry.config(SENTRY_DSN).install();
 
@@ -79,7 +84,11 @@ const AppContainer = createAppContainer(AppNavigator);
 
 export default class App extends React.PureComponent {
     render() {
-        return <AppContainer />;
+        return (
+            <Provider store={store}>
+                <AppContainer />
+            </Provider>
+        );
     }
 }
 
